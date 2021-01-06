@@ -1,1 +1,4 @@
 .Rhistory
+*.aux
+*.out
+*.toc
