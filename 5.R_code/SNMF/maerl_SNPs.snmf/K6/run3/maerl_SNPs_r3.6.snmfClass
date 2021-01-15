@@ -1,5 +1,0 @@
-new("snmfClass", directory = "K6/run3/", snmfClass.file = "maerl_SNPs_r3.6.snmfClass", 
-    K = 6L, run = 3L, CPU = 1L, seed = 338491550L, alpha = 10, 
-    percentage = 0.05, I = 0L, iterations = 200L, entropy = TRUE, 
-    tolerance = 1e-05, crossEntropy = 0.419492238232046, ploidy = 2L, 
-    Q.input.file = "", Q.output.file = "maerl_SNPs_r3.6.Q", G.output.file = "maerl_SNPs_r3.6.G")
