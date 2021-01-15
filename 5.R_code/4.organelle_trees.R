@@ -105,7 +105,7 @@ tree1 = ggplot(mito_dend$segments, horiz = TRUE)+
             size = 5, fontface = "bold", hjust = 1.2, vjust = 0.5, col = mito_df$tree_cols,
             angle = 90)+
   labs(title = mitolab,
-       subtitle = "(99.8 % identical sites)",
+       subtitle = "(32 variant sites)",
        tag = "(a)")+
   theme_dendro()+
   theme(plot.title = element_text(size = 18, hjust = 0.5),
@@ -193,7 +193,7 @@ tree2 = ggplot(plastid_dend$segments, horiz = TRUE)+
             size = 5, fontface = "bold", hjust = 1.2, vjust = 0.5, col = plastid_df$tree_cols,
             angle = 90)+
   labs(title = plastidlab,
-       subtitle = "(99.7 % identical sites)",
+       subtitle = "(417 variant sites)",
        tag = "(b)")+
   theme_dendro()+
   theme(plot.title = element_text(size = 18, hjust = 0.5),
@@ -319,7 +319,7 @@ tree3 = ggplot(mito_dend$segments, horiz = TRUE)+
             size = 5, fontface = "bold", hjust = 1.2, vjust = 0.5, col = mito_df$tree_cols,
             angle = 90)+
   labs(title = mitolab,
-       subtitle = "(60.9 % identical sites)",
+       subtitle = "(60.9 % of sites were invariant)",
        tag = "(a)")+
   theme_dendro()+
   theme(plot.title = element_text(size = 18, hjust = 0.5),
@@ -413,7 +413,7 @@ tree4 = ggplot(plastid_dend$segments, horiz = TRUE)+
             size = 5, fontface = "bold", hjust = 1.2, vjust = 0.5, col = plastid_df$tree_cols,
             angle = 90)+
   labs(title = plastidlab,
-       subtitle = "(73.1 % identical sites)",
+       subtitle = "(73.1 % of sites were invariant)",
        tag = "(b)")+
   theme_dendro()+
   theme(plot.title = element_text(size = 18, hjust = 0.5),
