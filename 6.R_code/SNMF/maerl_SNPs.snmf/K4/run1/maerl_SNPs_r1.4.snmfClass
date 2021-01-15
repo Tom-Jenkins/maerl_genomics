@@ -1,0 +1,5 @@
+new("snmfClass", directory = "K4/run1/", snmfClass.file = "maerl_SNPs_r1.4.snmfClass", 
+    K = 4L, run = 1L, CPU = 1L, seed = 1234L, alpha = 10, percentage = 0.05, 
+    I = 0L, iterations = 200L, entropy = TRUE, tolerance = 1e-05, 
+    crossEntropy = 0.413351057942395, ploidy = 2L, Q.input.file = "", 
+    Q.output.file = "maerl_SNPs_r1.4.Q", G.output.file = "maerl_SNPs_r1.4.G")

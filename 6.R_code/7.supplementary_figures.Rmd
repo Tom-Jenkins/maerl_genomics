@@ -1,0 +1,104 @@
+---
+title: "Maerl Whole Genome Genotyping Supplementary Material"
+author: "Jenkins et al."
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<!-- # Figure S1 -->
+
+```{r, include=TRUE, fig.align="center", echo=FALSE}
+knitr::include_graphics("./Figures/FigureS1.pdf")
+```
+
+| Site | Number of private alleles |
+| :--- | ---: | 
+| Armacao de Pera | 0 |
+| Bornalle | 10 |
+| Fal Estuary | 9 299 |
+| The Manacles | 0 |
+| Morlaix | 74 |
+| Norway | 0 |
+| Illa de Ons | 1 063 |
+| La Rochelle | 0 |
+| Trevignon | 46 |
+| Zara Shoal | 22 |
+
+\textbf{Figure S1.} Distribution of Prevosti genetic distances visualised with a heatmap (top-left) and a histogram (top-right). The heatmap shows that the highest pairwise genetic distances are between individuals from the Fal Estuary and all other individuals. The histogram shows no individuals with a pairwise distance of zero and that no clear gap is present between individuals of low genetic distances, the presence of which can be indicative of clones in the data set. The table shows the number of private alleles found at each site.
+
+<!-- # Figure S2 -->
+
+```{r, include=TRUE, fig.align="center", echo=FALSE}
+knitr::include_graphics("./Figures/FigureS2.pdf")
+```
+\textbf{Figure S2.} (a) Mean observed heterozygosity per SNP per site and (b) mean \textit{F}~IS~ per SNP per site. Site codes are explained in Table 1.
+
+<!-- # Figure S3 -->
+
+```{r, include=TRUE, fig.align="center", echo=FALSE}
+knitr::include_graphics("./Figures/FigureS3.pdf")
+```
+\textbf{Figure S3.} Heatmap of pairwise \textit{F}~ST~ (Weir & Cockerham 1984). Site codes are explained in Table 1.
+
+<!-- # Figure S4 -->
+\newpage
+(a)
+```{r, include=TRUE, fig.align="center", echo=FALSE}
+knitr::include_graphics("./Figures/FigureS4a.pdf")
+```
+\newpage
+(b)
+```{r, include=TRUE, fig.align="center", echo=FALSE}
+knitr::include_graphics("./Figures/FigureS4b.pdf")
+```
+\textbf{Figure S4.} (a) Cross-entropy analysis. (b) Sparse non-negative matrix factorisation (SNMF) analysis. Admixture results are shown for \textit{K}2-5. 
+
+
+<!-- # Figure S5 -->
+\newpage
+```{r, include=TRUE, fig.align="center", echo=FALSE}
+knitr::include_graphics("./Figures/FigureS5a.pdf")
+```
+\textbf{Figure S5a.} Tre04 mitogenome annotation. GeSeq was used for gene prediction and annotation using The Mold, Protozoan, and Coelenterate Mitochondrial Code and the Mycoplasma/Spiroplasma Code. ARWEN 1.2.3 was used to annotate tRNAs.
+
+\newpage
+```{r, include=TRUE, fig.align="center", echo=FALSE}
+knitr::include_graphics("Figures/FigureS5b.pdf")
+```
+\textbf{Figure S5b.} Tre04 plastome annotation. GeSeq was used for gene prediction and annotation using The Bacterial, Archaeal and Plant Plastid Code. ARWEN 1.2.3 was used to annotate tRNAs.
+
+\newpage
+```{r, include=TRUE, fig.align="center", echo=FALSE}
+knitr::include_graphics("Figures/FigureS5c.pdf")
+```
+\textbf{Figure S5c.} Sco01 mitogenome annotation. GeSeq was used for gene prediction and annotation using The Mold, Protozoan, and Coelenterate Mitochondrial Code and the Mycoplasma/Spiroplasma Code. ARWEN 1.2.3 was used to annotate tRNAs.
+
+\newpage
+```{r, include=TRUE, fig.align="center", echo=FALSE}
+knitr::include_graphics("Figures/FigureS5d.pdf")
+```
+\textbf{Figure S5d.} Sco01 plastome annotation. GeSeq was used for gene prediction and annotation using The Bacterial, Archaeal and Plant Plastid Code. ARWEN 1.2.3 was used to annotate tRNAs.
+
+\newpage
+```{r, include=TRUE, fig.align="center", echo=FALSE}
+knitr::include_graphics("Figures/FigureS5e.pdf")
+```
+\textbf{Figure S5e.} Lcor09 mitogenome annotation. GeSeq was used for gene prediction and annotation using The Mold, Protozoan, and Coelenterate Mitochondrial Code and the Mycoplasma/Spiroplasma Code. ARWEN 1.2.3 was used to annotate tRNAs.
+
+\newpage
+```{r, include=TRUE, fig.align="center", echo=FALSE}
+knitr::include_graphics("Figures/FigureS5f.pdf")
+```
+\textbf{Figure S5f.} Lcor09 plastome annotation. GeSeq was used for gene prediction and annotation using The Bacterial, Archaeal and Plant Plastid Code. ARWEN 1.2.3 was used to annotate tRNAs.
+
+
+<!-- # Figure S6 -->
+
+```{r, include=TRUE, fig.align="center", echo=FALSE}
+knitr::include_graphics("./Figures/FigureS6.pdf")
+```
+\textbf{Figure S6.} Hierarchical clustering analysis using Tamura and Nei (1993) pairwise genetic distances. (a) Analysis conducted using an alignment of 23 concatenated mitochondrial coding sequences from 69 \textit{Phymatolithon calcareum} individuals, seven \textit{P. purpureum} individuals, and two \textit{Lithothamnion corallioides} individuals. (b) Analysis conducted using an alignment of 212 concatenated chloroplast coding sequences from 75 \textit{Phymatolithon calcareum} individuals, nine \textit{P. purpureum} individuals, and four \textit{Lithothamnion corallioides} individuals. See Table 1 for code translation and sampling site information.
+

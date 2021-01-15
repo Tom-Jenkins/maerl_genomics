@@ -180,7 +180,7 @@ bcftools reheader --samples rename_samples -o variant_calls.vcf.rename variant_c
 
 ## Filter variants using [vcftools](https://vcftools.github.io/index.html) (_P. calcareum_ only)
 
-**Filter 1** (remove non-_P.calcareum_ and individuals with >50% missing genotypes)
+**Filter 1** (remove non-_P.calcareum_ and three P.calcareum individuals which failed)
 ```{r, engine = "bash", eval = FALSE}
 vcftools --vcf variant_calls.vcf.rename --missing-indv
 cat out.imiss | sort -k 5
@@ -192,21 +192,22 @@ vcftools --vcf variant_calls.vcf.rename --out filter1 --recode --recode-INFO-all
 **Filter 2** (filter SNPs)
 ```{r, engine = "bash", eval = FALSE}
 vcftools --vcf filter1.recode.vcf --out filter2 --recode --recode-INFO-all \
-      --minQ 30 --max-missing 0.95 --minDP 8 --maxDP 100 \
-      --min-alleles 2 --max-alleles 2 --remove-indels --mac 5
+      --minQ 30 --max-missing 0.95 --minDP 7 --maxDP 100 \
+      --min-alleles 2 --max-alleles 2 --remove-indels --mac 5 --hwe 0.05
 ```
 
 | Filter | Description |
 | :- | :- |
 | --minQ 30 | retain sites with a quality threshold >= 30 |
 | --max-missing 0.95 | retain sites with >= 95% complete genotypes |
-| --minDP 8 | retain sites with a minimum depth >= 8 |
+| --minDP 7 | retain sites with a minimum depth >= 8 |
 | --maxDP 100 | retain sites with a maximum depth <= 100 |
 | --min-alleles 2 --max-alleles 2 | retain biallelic sites only |
 | --remove-indels | exclude indels |
 | --mac 5 | retain sites with a minor allele count >= 5 |
+| --hwe 0.05 | remove SNPs that depart from Hardy-Weinberg equilibrium |
 | | |
-| SNPs remaining | 19 828 |
+| SNPs remaining | 20 789 |
 
 **Filter 3** (remove SNPs in linkage disequilibrium)
 ```{r, engine = "bash", eval = FALSE}
@@ -239,7 +240,7 @@ vcftools --vcf filter2.recode.vcf --out filter3 --recode --recode-INFO-all \
 | :- | :- |
 | --geno-r2 --min-r2 0.50 | exclude SNPs with an r2 > 0.50 |
 | | |
-| SNPs remaining | 15 298 |
+| SNPs remaining | 14 151 |
 
 
 ## Filter variants using [vcftools](https://vcftools.github.io/index.html) (introgression data set)
@@ -483,7 +484,7 @@ Two alignments were generated: (1) Only _Phymatolithon calcareum_ samples and (2
 
 
 ## Plastome annotation
-Plastome sequences were annotated using [GeSeq](https://chlorobox.mpimp-golm.mpg.de/geseq.html) and visualised using [OGDRAW](https://chlorobox.mpimp-golm.mpg.de/OGDraw.html). The _Lithothamnion sp._ GenBank record was used as a reference and The Bacterial, Archaeal and Plant Plastid Code and the Mycoplasma/Spiroplasma Code was used for annotation. ARAGORN 1.2.38 was used to annotate tRNAs. 
+Plastome sequences were annotated using [GeSeq](https://chlorobox.mpimp-golm.mpg.de/geseq.html) and visualised using [OGDRAW](https://chlorobox.mpimp-golm.mpg.de/OGDraw.html). The _Lithothamnion sp._ GenBank record was used as a reference and The Bacterial, Archaeal and Plant Plastid Code was used for annotation. ARAGORN 1.2.38 was used to annotate tRNAs. 
 
 ![Plastid coding sequences and tRNAs predicted by GeSeq for Tre04.](Files/Tre04_plastome_GeSeq_crop.jpg){ width=80% }
 
