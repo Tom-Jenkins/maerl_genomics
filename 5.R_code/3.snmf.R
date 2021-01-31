@@ -20,6 +20,12 @@ library(reshape2)
 library(scales)
 library(ggpubr)
 
+# Import Genind data
+load("Output_rdata_files/maerl_SNPs_snmf.RData")
+maerl = maerl.snmf
+summary(maerl$pop)
+nPop(maerl)
+
 
 # ----------------- #
 #
@@ -27,24 +33,13 @@ library(ggpubr)
 #
 # ----------------- #
 
-# Import Genind data
-load("Output_rdata_files/maerl_SNPs.RData")
-maerl
-summary(maerl$pop)
-
-# Remove Arm, Nor and Roc pops
-maerl = popsub(maerl, blacklist = c("Arm","Nor","Roc"))
-# maerl = popsub(maerl, blacklist = c("Arm","Nor"))
-summary(maerl$pop)
-nPop(maerl)
-
 # Run snmf algorithm
-snmf1 = snmf("SNMF/maerl_SNPs.geno",
-             K = 1:nPop(maerl), # number of K ancestral populations to run
-             repetitions = 10, # ten repetitions for each K
-             entropy = TRUE, # calculate cross-entropy
-             project = "new",
-             seed = 1234)
+# snmf1 = snmf("SNMF/maerl_SNPs.geno",
+#              K = 1:nPop(maerl), # number of K ancestral populations to run
+#              repetitions = 10, # ten repetitions for each K
+#              entropy = TRUE, # calculate cross-entropy
+#              project = "new",
+#              seed = 1234)
 
 # Load snmf project
 snmf1 = load.snmfProject("SNMF/maerl_SNPs.snmfProject")
@@ -52,139 +47,172 @@ snmf1 = load.snmfProject("SNMF/maerl_SNPs.snmfProject")
 # Plot cross-entropy results to assess optimal number of K
 # Smaller values of cross-entropy usually mean better runs
 # A plateau usually represents the K that best fits the data
-# png("./Figures/FigureS4a.png", width = 10, height = 7, unit = "in", res = 600)
+png("./Figures/FigureS4a.png", width = 10, height = 7, unit = "in", res = 600)
+plot(snmf1, col = "blue", cex = 1.5, pch = 19, cex.axis = 1, cex.lab = 1.5,
+     main = "SNMF: Cross-entropy", cex.main = 1.5)
+dev.off()
 pdf("./Figures/FigureS4a.pdf", width = 10, height = 7)
 plot(snmf1, col = "blue", cex = 1.5, pch = 19, cex.axis = 1, cex.lab = 1.5,
      main = "SNMF: Cross-entropy", cex.main = 1.5)
 dev.off()
 
+
+# ----------------- #
+#
+# R function to plot each K
+#
+# ----------------- #
+
+# Function to plot each K from snmf results
+# Argument k = number of ancestral populations
+# Argument colours = colour definitions of each K (default is ggplot2 palette)
+plotk_func = function(k, colours = hue_pal()(k)){
+  
+  # Extract the cross-entropy of all runs where K = k
+  ce = cross.entropy(snmf1, K = k)
+  
+  # Find the run with the lowest cross-entropy
+  lowest.ce = which.min(ce)
+  
+  # Extract Q-matrix for the best run
+  qmatrix = as.data.frame(Q(snmf1, K = k, run = lowest.ce))
+  
+  # Label column names of qmatrix
+  cluster_names = c()
+  for (i in 1:k){
+    cluster_names[i] = paste("Cluster", i)
+  }
+  colnames(qmatrix) = cluster_names
+  
+  # Add individual IDs
+  qmatrix$Ind = indNames(maerl)
+  
+  # Add site IDs
+  qmatrix$Site = maerl$pop
+  
+  # Convert dataframe to long format
+  qlong = melt(qmatrix, id.vars=c("Ind","Site"))
+  
+  # Change order of individuals by using the factor function
+  ind.order = c(grep("Zar", indNames(maerl), value = T),
+                grep("Man", indNames(maerl), value = T),
+                grep("Fal", indNames(maerl), value = T),
+                grep("Mor", indNames(maerl), value = T),
+                grep("Tre", indNames(maerl), value = T),
+                # grep("Roc", indNames(maerl), value = T),
+                grep("Bor", indNames(maerl), value = T),
+                grep("Ons", indNames(maerl), value = T))
+  qlong$Ind = factor(qlong$Ind, levels = rev(ind.order))
+  
+  # Plot admixture barplot 
+  snmfbar = ggplot(data=qlong, aes(x=Ind, y=value, fill=variable))+
+    geom_bar(stat="identity", show.legend = FALSE)+
+    coord_flip()+
+    scale_y_continuous(expand=c(0,0))+
+    scale_fill_manual(values = as.character(colours))+
+    ylab("Admixture proportion")+
+    # xlab("Individual")+
+    theme(axis.text.y = element_text(face = "bold", colour = "black", size = 10),
+          axis.text.x = element_text(angle = 360, colour = "black", size = 12),
+          axis.title = element_text(size = 14),
+          axis.title.y = element_blank(),
+          panel.grid = element_blank(),
+          panel.background = element_blank(),
+          legend.position = "top",
+          legend.title = element_blank(),
+          legend.text = element_text(size = 12),
+          plot.margin = margin(t = 0, r = 20, b = 0, l = 0, unit = "pt")
+          )
+  
+  # Return barplot
+  return(snmfbar)
+}
+
+# Extract barplots for K2-7
+snmfbar_K2 = plotk_func(k = 2)
+snmfbar_K3 = plotk_func(k = 3)
+snmfbar_K4 = plotk_func(k = 4)
+snmfbar_K5 = plotk_func(k = 5)
+snmfbar_K6 = plotk_func(k = 6)
+snmfbar_K7 = plotk_func(k = 7)
+
+# Combine barplots
+snmfbars = ggarrange(
+  snmfbar_K2 + labs(title = "K2") + theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()),
+  snmfbar_K3 + labs(title = "K3") + theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()),
+  snmfbar_K4 + labs(title = "K4") + theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()),
+  snmfbar_K5 + labs(title = "K5") + theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()),
+  snmfbar_K6 + labs(title = "K6"),
+  snmfbar_K7 + labs(title = "K7"),
+  nrow = 3, ncol = 2
+  )
+
+# Figure S4b
+snmfbars = annotate_figure(snmfbars,
+                           text_grob("SNMF admixture K2-7", face = "bold", size = 25))
+snmfbars
+ggsave(plot = snmfbars, "Figures/FigureS4b.png", width = 15, height = 20, dpi = 600)
+ggsave(plot = snmfbars, "Figures/FigureS4b.pdf", width = 15, height = 20)
+
+
+# ----------------- #
+#
+# Figure 2 barplot (K = 6)
+#
+# ----------------- #
+
+# Colour definitions for colour argument
+# red "#e41a1c"
+# dark red "#a50f15"
+# blue "#377eb8"
+# purple "#984ea3"
+# orange "#ff7f00"
+# green "#4daf4a"
+cols = data.frame(
+  "bor_cluster" = "#e41a1c",
+  "tre_cluster" = "#4daf4a",
+  "zar_cluster" = "#377eb8",
+  "fal_cluster" = "#ff7f00",
+  "Ons_cluster" = "#a50f15",
+  "mor_cluster" = "#984ea3",
+  check.names = FALSE
+)
+
+# Plot barplot
+fig2_bar = plotk_func(k = 6, colours = cols)
+fig2_bar
+
+
+# ----------------- #
+#
+# Figure 2 pie charts (K = 6)
+#
+# ----------------- #
+
 # Select K
-k = 5
+k = 6
 
 # Extract the cross-entropy of all runs where K = k
 ce = cross.entropy(snmf1, K = k)
-ce
 
 # Find the run with the lowest cross-entropy
 lowest.ce = which.min(ce)
-lowest.ce
 
 # Extract Q-matrix for the best run
 qmatrix = as.data.frame(Q(snmf1, K = k, run = lowest.ce))
-head(qmatrix)
 
 # Label column names of qmatrix
 cluster_names = c()
 for (i in 1:k){
   cluster_names[i] = paste("Cluster", i)
 }
-cluster_names
 colnames(qmatrix) = cluster_names
-head(qmatrix)
 
 # Add individual IDs
 qmatrix$Ind = indNames(maerl)
 
 # Add site IDs
 qmatrix$Site = maerl$pop
-head(qmatrix)
-
-# Convert dataframe to long format
-qlong = melt(qmatrix, id.vars=c("Ind","Site"))
-head(qlong)
-
-# Change order of individuals by using the factor function
-ind.order = c(grep("Zar", indNames(maerl), value = T),
-              grep("Man", indNames(maerl), value = T),
-              grep("Fal", indNames(maerl), value = T),
-              grep("Mor", indNames(maerl), value = T),
-              grep("Tre", indNames(maerl), value = T),
-              # grep("Roc", indNames(maerl), value = T),
-              grep("Bor", indNames(maerl), value = T),
-              grep("Ons", indNames(maerl), value = T))
-qlong$Ind = factor(qlong$Ind, levels = rev(ind.order))
-
-# Change order of sites by using the factor function
-# site.order = c("Zar","Man","Fal","Mor","Tre","Roc","Bor","Ons")
-# qlong$Site_ord = factor(qlong$Site, levels = site.order)
-
-# Adjust facet labels
-# levels(qlong$Site)
-# facet.labs = c("Bergen","Cromer","Flodevigen","Helgoland","xxx",
-#                "Isles of Scilly","Lysekil","Mullet Peninsula","Shetland","Vigo")
-# levels(qlong$Site) = facet.labs
-# levels(qlong$Site)
-
-# Define colour palette
-show_col(brewer.pal(9, "Set1"))
-# cols = brewer.pal(nPop(maerl), "Set1") ; cols
-
-# Colour definitions
-# red "#e41a1c"
-# blue "#377eb8"
-# purple "#984ea3"
-# orange "#ff7f00"
-# green "#4daf4a"
-cols = data.frame(
-                  "fal_cluster" = "#ff7f00",
-                  "bor_cluster" = "#e41a1c",
-                  "tre_cluster" = "#4daf4a",
-                  "zar_cluster" = "#377eb8",
-                  "mor_cluster" = "#984ea3",
-                  check.names = FALSE
-                  ) 
-
-# Plot admixture barplot 
-snmfbar = ggplot(data=qlong, aes(x=Ind, y=value, fill=variable))+
-  geom_bar(stat="identity", show.legend = FALSE)+
-  coord_flip()+
-  scale_y_continuous(expand=c(0,0))+
-  # scale_fill_manual(values = as.character(cols))+
-  ylab("Admixture proportion")+
-  # xlab("Individual")+
-  theme(axis.text.y = element_text(face = "bold", colour = "black", size = 10),
-        axis.text.x = element_text(angle = 360, colour = "black", size = 12),
-        axis.title = element_text(size = 14),
-        axis.title.y = element_blank(),
-        panel.grid = element_blank(),
-        panel.background = element_blank(),
-        legend.position = "top",
-        legend.title = element_blank(),
-        legend.text = element_text(size = 12))
-snmfbar
-# ggsave("snmf_bar.png", width=15, height=5, dpi=300)
-
-
-# ----------------- #
-#
-# Combine K barplots
-#
-# ----------------- #
-
-# snmfbar2 = snmfbar # k2
-# snmfbar3 = snmfbar # k3
-# snmfbar4 = snmfbar # k4
-# snmfbar5 = snmfbar # k5
-
-library(ggpubr)
-snmfbars = ggarrange(
-          snmfbar2 + labs(title = "K2"),
-          snmfbar3 + labs(title = "K3"),
-          snmfbar4 + labs(title = "K4"),
-          snmfbar5 + labs(title = "K5"),
-          nrow = 2, ncol = 2)
-snmfbars = annotate_figure(snmfbars,
-                text_grob("SNMF admixture K2-5", face = "bold", size = 25))
-snmfbars
-ggsave(plot = snmfbars, "Figures/FigureS4b.png", width = 15, height = 15, dpi = 600)
-ggsave(plot = snmfbars, "Figures/FigureS4b.pdf", width = 15, height = 15)
-
-
-# ----------------- #
-#
-# Prepare pie charts
-#
-# ----------------- #
 
 # Calculate mean admixture proportions for each site
 head(qmatrix)
@@ -381,6 +409,7 @@ pie.eng.lab = pie.eng +
              fontface = "bold", size = 5)
 pie.eng.lab
 
+
 # ----------------- #
 #
 # Create inset map
@@ -391,23 +420,24 @@ pie.eng.lab
 inset = pie.map +
   annotation_custom(grob = ggplotGrob(pie.eng.lab),
                     xmin=-2, xmax=5, ymin=51, ymax=55)
-inset
+# inset
 # ggsave("snmf_map", width = 10, height = 8, dpi = 300)
 
 # Add labels to inset
 site_labs1 = subset(coords, Code != "Fal" & Code != "Man")
 site_labs1
-inset2 = inset +
+fig2_map = inset +
   geom_label(data = site_labs1, aes(x = Lon + 1.4, y = Lat, label = Code),
              fontface = "bold", size = 5)
-inset2
+fig2_map
 
 # Combine ggplots
-fig2 = ggarrange(snmfbar + labs(tag = "(a)") + theme(plot.tag = element_text(size=15, face = "bold")),
-          inset2 + labs(tag = "(b)") +
-            theme(plot.margin = margin(t = 5.5, r = 5.5, b = 5.5, l = -180, unit = "pt"),
-                  plot.tag = element_text(size=15, face = "bold")),
-          ncol = 2, widths = c(1,3))
+fig2 = ggarrange(ncol = 2, widths = c(1,3),
+                 fig2_bar + labs(tag = "(a)") + theme(plot.tag = element_text(size=15, face = "bold")),
+                 fig2_map + labs(tag = "(b)") +
+                    theme(plot.margin = margin(t = 5.5, r = 5.5, b = 5.5, l = -180, unit = "pt"),
+                      plot.tag = element_text(size=15, face = "bold"))
+                 )
 fig2
 ggsave(plot = fig2, "./Figures/Figure2.png", width = 12.8, height = 9.97, dpi = 600)
 ggsave(plot = fig2, "./Figures/Figure2.pdf", width = 12.8, height = 9.97)

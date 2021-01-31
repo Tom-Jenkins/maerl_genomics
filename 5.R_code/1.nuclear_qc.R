@@ -16,7 +16,6 @@ library(adegenet)
 library(poppr)
 library(hierfstat)
 library(reshape2)
-library(ggplot)
 library(ggplotify)
 library(ggpubr)
 library(tidyverse)
@@ -132,13 +131,14 @@ dist.df[order(dist.df$value), ] %>% head(n = 10)
 hist_theme = theme(
   axis.text = element_text(size = 11),
   axis.title = element_text(size = 12),
-  plot.title = element_text(size = 15, hjust = 0.5, face = "bold")
+  plot.title = element_text(size = 15, hjust = 0.5, face = "bold"),
+  plot.margin = margin(r = 20, unit = "pt")
 )
 
 # Plot histogram of distances
 hist1 = ggplot(dist.df, aes(x = value))+
   geom_histogram(fill = "grey60", colour = "black", binwidth = 0.005)+
-  scale_x_continuous(expand = c(0,0))+
+  scale_x_continuous(expand = c(0,0), limits = c(0, max(dist.df$value)+0.01))+
   scale_y_continuous(expand = c(0,0))+
   xlab("Prevosti genetic distances")+
   ylab("Frequency")+
@@ -151,8 +151,8 @@ figS1 = ggarrange(heatmap1,
                   hist1,
                   ncol = 2)
 figS1
-ggsave(plot = figS1, filename = "Figures/FigureS1.pdf", width = 16, height = 7)
-ggsave(plot = figS1, filename = "Figures/FigureS1.png", width = 16, height = 7, dpi = 600)
+# ggsave(plot = figS1, filename = "Figures/FigureS1.pdf", width = 16, height = 7)
+# ggsave(plot = figS1, filename = "Figures/FigureS1.png", width = 16, height = 7, dpi = 600)
 
 
 # ----------------- #
@@ -213,17 +213,17 @@ ggplot(data = outflnk.df)+
 
 # Export filtered data set in Genind format
 maerl
+summary(maerl$pop)
 save(maerl, file = "Output_rdata_files/maerl_SNPs.RData")
 
 # Export file in geno format for SNMF analysis
+# Create a data set without Arm, Nor and Roc (low sample sizes)
 load("Output_rdata_files/maerl_SNPs.RData")
-maerl
-summary(maerl$pop)
-maerl.snmf = popsub(maerl, blacklist = c("Arm","Nor","Roc")) # remove - low sample size
-summary(maerl.snmf$pop) 
-isPoly(maerl.snmf) %>% summary # Only keep polymorphic loci
-maerl.snmf = maerl.snmf[loc = names(which(isPoly(maerl.snmf) == TRUE))] 
-maerl.snmf
+pops_to_remove = c("Arm","Nor","Roc")
+maerl.snmf = popsub(maerl, blacklist = pops_to_remove)
+isPoly(maerl.snmf) %>% summary # Check loci still polymorphic
+summary(maerl.snmf$pop)
+save(maerl.snmf, file = "Output_rdata_files/maerl_SNPs_snmf.RData")
 
 # Convert to matrix and encode genotypes as characters
 maerl.geno = genind2df(maerl.snmf, usepop = FALSE)
@@ -248,4 +248,16 @@ maerl.geno = apply(maerl.geno, MARGIN = 2, FUN = as.numeric)
 # Export geno file
 library(LEA)
 write.geno(maerl.geno, output.file = "SNMF/maerl_SNPs.geno")
+
+# Export filtered data set in TreeMix format
+library(dartR)
+load("Output_rdata_files/maerl_SNPs_snmf.RData")
+maerl.tree = maerl.snmf
+# maerl.tree = maerl.snmf[!rownames(tab(maerl.snmf)) %in% "Mor05"] # remove Mor05 individual
+# maerl.tree = missingno(maerl.tree, cutoff = 0) # no missing data set
+maerl.tree
+isPoly(maerl.tree) %>% summary
+maerl.tree %>%
+  gi2gl %>%
+  gl2treemix(outfile = "maerl_SNPs_treemix.gz", outpath = "TreeMix")
 

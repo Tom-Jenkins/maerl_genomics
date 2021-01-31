@@ -12,6 +12,7 @@
 # Load packages
 library(adegenet)
 library(poppr)
+library(hierfstat)
 library(ggpubr)
 library(tidyverse)
 
@@ -29,6 +30,11 @@ summary(maerl$pop)
 
 # Calculate the number of private alleles per site
 private_alleles(maerl) %>% apply(MARGIN = 1, FUN = sum)
+
+# Calculate mean allelic richness per site
+allelic.richness(genind2hierfstat(maerl))$Ar %>%
+  apply(MARGIN = 2, FUN = mean) %>% 
+  round(digits = 3)
 
 # Calculate basic stats using hierfstat
 # basic_stats = basic.stats(maerl, diploid = TRUE, digits = 3)
@@ -52,8 +58,8 @@ het.site = tibble(SNP_ID = rownames(basic_stats$Ho),
 het.site
 
 # Mean and median observed heterozygosity per site
-dplyr::select(het.site, -SNP_ID) %>% apply(MARGIN = 2, FUN = mean, na.rm = TRUE)
-dplyr::select(het.site, -SNP_ID) %>% apply(MARGIN = 2, FUN = median, na.rm = TRUE)
+dplyr::select(het.site, -SNP_ID) %>% apply(MARGIN = 2, FUN = mean, na.rm = TRUE) %>% round(digits = 2)
+dplyr::select(het.site, -SNP_ID) %>% apply(MARGIN = 2, FUN = median, na.rm = TRUE) %>% round(digits = 2)
 
 # Convert tibble to long format
 het.site = het.site %>%
@@ -92,8 +98,8 @@ fis.site = tibble(SNP_ID = rownames(basic_stats$Fis),
 fis.site
 
 # Mean and median FIS per site
-dplyr::select(fis.site, -SNP_ID) %>% apply(MARGIN = 2, FUN = mean, na.rm = TRUE)
-dplyr::select(fis.site, -SNP_ID) %>% apply(MARGIN = 2, FUN = median, na.rm = TRUE)
+dplyr::select(fis.site, -SNP_ID) %>% apply(MARGIN = 2, FUN = mean, na.rm = TRUE) %>% round(digits = 2)
+dplyr::select(fis.site, -SNP_ID) %>% apply(MARGIN = 2, FUN = median, na.rm = TRUE) %>% round(digits = 2)
 
 # Convert tibble to long format
 fis.site = fis.site %>%
@@ -179,7 +185,7 @@ cols = data.frame("Bor" = "#e41a1c",
                   # "Mil" = "green",
                   "Mor" = "#984ea3",
                   "Nor" = "yellow3",
-                  "Ons" = "#e31a1c",
+                  "Ons" = "#a50f15",
                   "Roc" = "white",
                   "Arm" = "deeppink",
                   "Tre" = "#4daf4a",

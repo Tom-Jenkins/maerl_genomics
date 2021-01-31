@@ -1,0 +1,116 @@
+---
+title: "Maerl Whole Genome Genotyping Supplementary Figures"
+author: "Jenkins et al."
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<!-- # Figure S1 -->
+
+```{r, include=TRUE, fig.align="center", echo=FALSE}
+knitr::include_graphics("./Figures/FigureS1.pdf")
+```
+
+| Site | Number of private alleles | Allelic richness | Mean observed heterozygosity | Mean \textit{F}~IS~
+| :--- | ---: | ---: | ---: | ---: |
+| Armacao de Pera | 0 | NA | NA | NA
+| Bornalle | 10 | 1.15 | 0.18 | -0.13
+| Fal Estuary | 9 299 | 1.18 | 0.25 | -0.28 
+| The Manacles | 0 | 1.16 | 0.18 | -0.12
+| Morlaix | 74 | 1.14 | 0.17 | -0.13
+| Norway | 0 | NA | NA | NA 
+| Illa de Ons | 1 063 | 1.16 | 0.19 | -0.13
+| La Rochelle | 0 | 1.16 | NA | -0.13
+| Trevignon | 46 | 1.15 | 0.18 |  -0.13
+| Zara Shoal | 22 | 1.14 | 0.17 | -0.16
+
+\textbf{Figure S1.} Distribution of Prevosti genetic distances visualised with a heatmap (top-left) and a histogram (top-right). The heatmap shows that the highest pairwise genetic distances are between individuals from the Fal Estuary and all other individuals. The histogram shows no individuals with a pairwise distance of zero and that no clear gap is present between individuals of low genetic distances, the presence of which can be indicative of clones in the data set. The table shows the number of private alleles, allelic richness, and mean observed heterozygosity per SNP and mean \textit{F}~IS~ per SNP at each site.
+
+<!-- # Figure S2 -->
+
+```{r, include=TRUE, fig.align="center", echo=FALSE}
+knitr::include_graphics("./Figures/FigureS2.pdf")
+```
+\textbf{Figure S2.} (a) Mean observed heterozygosity per SNP per site and (b) mean \textit{F}~IS~ per SNP per site. Site codes are explained in Table 1.
+
+<!-- # Figure S3 -->
+
+```{r, include=TRUE, fig.align="center", echo=FALSE}
+knitr::include_graphics("./Figures/FigureS3.pdf")
+```
+\textbf{Figure S3.} Heatmap of pairwise \textit{F}~ST~ (Weir & Cockerham 1984). Site codes are explained in Table 1.
+
+<!-- # Figure S4 -->
+\newpage
+(a)
+```{r, include=TRUE, fig.align="center", echo=FALSE}
+knitr::include_graphics("./Figures/FigureS4a.pdf")
+```
+\newpage
+(b)
+```{r, include=TRUE, fig.align="center", echo=FALSE, out.height="90%"}
+knitr::include_graphics("./Figures/FigureS4b.pdf")
+```
+\textbf{Figure S4.} (a) Cross-entropy analysis. (b) Sparse non-negative matrix factorisation (SNMF) analysis. Admixture results are shown for \textit{K}2-7. 
+
+
+<!-- # Figure S5 -->
+\newpage
+```{r, include=TRUE, fig.align="center", echo=FALSE}
+knitr::include_graphics("./Figures/FigureS5.pdf")
+```
+\textbf{Figure S5.} TreeMix results. The top-left plot shows the variance explained (%) in each tree model as migration events are added. The remaining plots show the topology of each model as each migration event is added.
+
+<!-- # Figure S6 -->
+\newpage
+```{r, include=TRUE, fig.align="center", echo=FALSE}
+knitr::include_graphics("./Figures/FigureS6a.pdf")
+```
+\textbf{Figure S6a.} Tre04 mitogenome annotation. GeSeq was used for gene prediction and annotation using The Mold, Protozoan, and Coelenterate Mitochondrial Code and the Mycoplasma/Spiroplasma Code. ARWEN 1.2.3 was used to annotate tRNAs.
+
+\newpage
+```{r, include=TRUE, fig.align="center", echo=FALSE}
+knitr::include_graphics("Figures/FigureS6b.pdf")
+```
+\textbf{Figure S6b.} Tre04 plastome annotation. GeSeq was used for gene prediction and annotation using The Bacterial, Archaeal and Plant Plastid Code. ARWEN 1.2.3 was used to annotate tRNAs.
+
+\newpage
+```{r, include=TRUE, fig.align="center", echo=FALSE}
+knitr::include_graphics("Figures/FigureS6c.pdf")
+```
+\textbf{Figure S6c.} Sco01 mitogenome annotation. GeSeq was used for gene prediction and annotation using The Mold, Protozoan, and Coelenterate Mitochondrial Code and the Mycoplasma/Spiroplasma Code. ARWEN 1.2.3 was used to annotate tRNAs.
+
+\newpage
+```{r, include=TRUE, fig.align="center", echo=FALSE}
+knitr::include_graphics("Figures/FigureS6d.pdf")
+```
+\textbf{Figure S6d.} Sco01 plastome annotation. GeSeq was used for gene prediction and annotation using The Bacterial, Archaeal and Plant Plastid Code. ARWEN 1.2.3 was used to annotate tRNAs.
+
+\newpage
+```{r, include=TRUE, fig.align="center", echo=FALSE}
+knitr::include_graphics("Figures/FigureS6e.pdf")
+```
+\textbf{Figure S6e.} Lcor09 mitogenome annotation. GeSeq was used for gene prediction and annotation using The Mold, Protozoan, and Coelenterate Mitochondrial Code and the Mycoplasma/Spiroplasma Code. ARWEN 1.2.3 was used to annotate tRNAs.
+
+\newpage
+```{r, include=TRUE, fig.align="center", echo=FALSE}
+knitr::include_graphics("Figures/FigureS6f.pdf")
+```
+\textbf{Figure S6f.} Lcor09 plastome annotation. GeSeq was used for gene prediction and annotation using The Bacterial, Archaeal and Plant Plastid Code. ARWEN 1.2.3 was used to annotate tRNAs.
+
+
+<!-- # Figure S7 -->
+```{r, include=TRUE, fig.align="center", echo=FALSE}
+knitr::include_graphics("./Figures/FigureS7.pdf")
+```
+\textbf{Figure S7.} Hierarchical clustering analysis using Tamura and Nei (1993) pairwise genetic distances. (a) Analysis conducted using an alignment of 24 concatenated mitochondrial coding sequences from 69 \textit{Phymatolithon calcareum} individuals. (b) Analysis conducted using an alignment of 212 concatenated chloroplast coding sequences from 75 \textit{P. calcareum} individuals. See Table 1 for code translation and sampling site information.
+
+<!-- # Figure S8 -->
+```{r, include=TRUE, fig.align="center", echo=FALSE}
+knitr::include_graphics("./Figures/FigureS8.pdf")
+```
+\textbf{Figure S8.} Hierarchical clustering analysis using Tamura and Nei (1993) pairwise genetic distances. (a) Analysis conducted using an alignment of 23 concatenated mitochondrial coding sequences from 69 \textit{Phymatolithon calcareum} individuals, seven \textit{P. purpureum} individuals, and two \textit{Lithothamnion corallioides} individuals. (b) Analysis conducted using an alignment of 212 concatenated chloroplast coding sequences from 75 \textit{Phymatolithon calcareum} individuals, nine \textit{P. purpureum} individuals, and four \textit{Lithothamnion corallioides} individuals. See Table 1 for code translation and sampling site information.
+
