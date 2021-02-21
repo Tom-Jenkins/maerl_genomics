@@ -47,14 +47,14 @@ snmf1 = load.snmfProject("SNMF/maerl_SNPs.snmfProject")
 # Plot cross-entropy results to assess optimal number of K
 # Smaller values of cross-entropy usually mean better runs
 # A plateau usually represents the K that best fits the data
-png("./Figures/FigureS4a.png", width = 10, height = 7, unit = "in", res = 600)
+# png("./Figures/FigureS4a.png", width = 10, height = 7, unit = "in", res = 600)
 plot(snmf1, col = "blue", cex = 1.5, pch = 19, cex.axis = 1, cex.lab = 1.5,
      main = "SNMF: Cross-entropy", cex.main = 1.5)
-dev.off()
-pdf("./Figures/FigureS4a.pdf", width = 10, height = 7)
-plot(snmf1, col = "blue", cex = 1.5, pch = 19, cex.axis = 1, cex.lab = 1.5,
-     main = "SNMF: Cross-entropy", cex.main = 1.5)
-dev.off()
+# dev.off()
+# pdf("./Figures/FigureS4a.pdf", width = 10, height = 7)
+# plot(snmf1, col = "blue", cex = 1.5, pch = 19, cex.axis = 1, cex.lab = 1.5,
+#      main = "SNMF: Cross-entropy", cex.main = 1.5)
+# dev.off()
 
 
 # ----------------- #
@@ -88,10 +88,13 @@ plotk_func = function(k, colours = hue_pal()(k)){
   qmatrix$Ind = indNames(maerl)
   
   # Add site IDs
-  qmatrix$Site = maerl$pop
+  qmatrix$Site = as.character(maerl$pop)
   
   # Convert dataframe to long format
-  qlong = melt(qmatrix, id.vars=c("Ind","Site"))
+  qlong = melt(qmatrix, id.vars=c("Ind","Site"), variable.name="Ancestry", value.name="Proportion")
+  
+  # Sort data.frame with ancestry order by overall proportion of each ancestry
+  # qlong = qlong %>% arrange(Ind, desc(Proportion))
   
   # Change order of individuals by using the factor function
   ind.order = c(grep("Zar", indNames(maerl), value = T),
@@ -103,10 +106,10 @@ plotk_func = function(k, colours = hue_pal()(k)){
                 grep("Bor", indNames(maerl), value = T),
                 grep("Ons", indNames(maerl), value = T))
   qlong$Ind = factor(qlong$Ind, levels = rev(ind.order))
-  
-  # Plot admixture barplot 
-  snmfbar = ggplot(data=qlong, aes(x=Ind, y=value, fill=variable))+
-    geom_bar(stat="identity", show.legend = FALSE)+
+
+  # Plot admixture barplot
+  snmfbar = ggplot(data=qlong, aes(x=Ind, y=Proportion, fill=Ancestry))+
+    geom_bar(stat = "identity", width=1, colour="black", size=0.25, show.legend=FALSE)+
     coord_flip()+
     scale_y_continuous(expand=c(0,0))+
     scale_fill_manual(values = as.character(colours))+
@@ -151,8 +154,8 @@ snmfbars = ggarrange(
 snmfbars = annotate_figure(snmfbars,
                            text_grob("SNMF admixture K2-7", face = "bold", size = 25))
 snmfbars
-ggsave(plot = snmfbars, "Figures/FigureS4b.png", width = 15, height = 20, dpi = 600)
-ggsave(plot = snmfbars, "Figures/FigureS4b.pdf", width = 15, height = 20)
+# ggsave(plot = snmfbars, "Figures/FigureS4b.png", width = 15, height = 20, dpi = 600)
+# ggsave(plot = snmfbars, "Figures/FigureS4b.pdf", width = 15, height = 20)
 
 
 # ----------------- #
@@ -162,15 +165,15 @@ ggsave(plot = snmfbars, "Figures/FigureS4b.pdf", width = 15, height = 20)
 # ----------------- #
 
 # Colour definitions for colour argument
+# blue "#377eb8"
+# orange "#ff7f00"
+# blue-green "#009E73"
+# purple "#984ea3"
 # red "#e41a1c"
 # dark red "#a50f15"
-# blue "#377eb8"
-# purple "#984ea3"
-# orange "#ff7f00"
-# green "#4daf4a"
 cols = data.frame(
   "bor_cluster" = "#e41a1c",
-  "tre_cluster" = "#4daf4a",
+  "tre_cluster" = "#009E73",
   "zar_cluster" = "#377eb8",
   "fal_cluster" = "#ff7f00",
   "Ons_cluster" = "#a50f15",
@@ -234,7 +237,7 @@ pie_charts = function(admix_df, site, cols){
   # cols = vector of colours of length(clusters)
   ggplot(data = subset(admix_df, Group.1 == site),
          aes(x = "", y = value, fill = variable))+
-    geom_bar(width = 1, stat = "identity", colour = "black", show.legend = FALSE)+
+    geom_bar(width = 1, alpha = 0.95, stat = "identity", colour = "black", size = 0.5, show.legend = FALSE)+
     coord_polar(theta = "y")+
     scale_fill_manual(values = as.character(cols))+
     theme_void()
@@ -292,7 +295,7 @@ basemap = ggplot()+
   coord_quickmap(xlim = c(-12,5), expand = FALSE)+
   ggsn::north(map.outlines, symbol = 10, scale = 0.06, location = "topleft")+
   ggsn::scalebar(data = map.outlines, dist = 100, dist_unit = "km", height = 0.01,
-                 transform = TRUE, model = "WGS84", 
+                 transform = TRUE, model = "WGS84", border.size = 0.5,
                  location = "bottomleft", anchor = c(x = -10, y = 45),
                  st.bottom = FALSE, st.size = 4, st.dist = 0.015)+
   xlab("Longitude")+
@@ -439,5 +442,5 @@ fig2 = ggarrange(ncol = 2, widths = c(1,3),
                       plot.tag = element_text(size=15, face = "bold"))
                  )
 fig2
-ggsave(plot = fig2, "./Figures/Figure2.png", width = 12.8, height = 9.97, dpi = 600)
-ggsave(plot = fig2, "./Figures/Figure2.pdf", width = 12.8, height = 9.97)
+# ggsave(plot = fig2, "./Figures/Figure2.png", width = 12.8, height = 9.97, dpi = 600)
+# ggsave(plot = fig2, "./Figures/Figure2.pdf", width = 12.8, height = 9.97)

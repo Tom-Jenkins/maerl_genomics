@@ -129,8 +129,8 @@ figS2 = ggarrange(het.site.plt + labs(tag = "(a)"),
                   fis.site.plt + labs(tag = "(b)"),
                   nrow = 2)
 figS2
-ggsave(plot = figS2, filename = "Figures/FigureS2.pdf", width = 8, height = 10)
-ggsave(plot = figS2, filename = "Figures/FigureS2.png", width = 8, height = 10, dpi = 600)
+# ggsave(plot = figS2, filename = "Figures/FigureS2.pdf", width = 8, height = 10)
+# ggsave(plot = figS2, filename = "Figures/FigureS2.png", width = 8, height = 10, dpi = 600)
 
 
 # ----------------- #
@@ -174,21 +174,21 @@ head(ind_coords)
 
 # Colour definitions
 levels(ind_coords$Pop)
-# red "#e41a1c"
 # blue "#377eb8"
-# purple "#984ea3"
 # orange "#ff7f00"
-# green "#4daf4a"
+# blue-green "#009E73"
+# purple "#984ea3"
+# red "#e41a1c"
+# dark red "#a50f15"
 cols = data.frame("Bor" = "#e41a1c",
                   "Fal" = "#ff7f00",
                   "Man" = "#377eb8",
-                  # "Mil" = "green",
                   "Mor" = "#984ea3",
                   "Nor" = "yellow3",
                   "Ons" = "#a50f15",
                   "Roc" = "white",
                   "Arm" = "deeppink",
-                  "Tre" = "#4daf4a",
+                  "Tre" = "#009E73",
                   "Zar" = "#377eb8",
                   check.names = FALSE)
 
@@ -218,7 +218,13 @@ pca.plt1 = ggplot(data = ind_coords, aes(x = Axis1, y = Axis2))+
   geom_hline(yintercept = 0)+
   geom_vline(xintercept = 0)+
   # labels
-  geom_label(aes(label = Ind, fill = Pop), size = 4, show.legend = FALSE)+
+  # geom_label(aes(label = Ind, fill = Pop), size = 4, show.legend = FALSE)+
+  # spider segments
+  geom_segment(aes(xend = Axis1.cen, yend = Axis2.cen, colour = Pop), show.legend = FALSE)+
+  # points
+  geom_point(aes(fill = Pop), shape = 21, size = 4,  show.legend = FALSE)+
+  # centroids
+  geom_label(data = centroid, aes(label = Pop, fill = Pop), size = 5, alpha = 0.9, show.legend = FALSE)+
   # colouring
   scale_fill_manual(values = cols)+
   scale_colour_manual(values = cols)+
@@ -236,7 +242,13 @@ pca.plt2 = ggplot(data = ind_coords, aes(x = Axis1, y = Axis3))+
   geom_hline(yintercept = 0)+
   geom_vline(xintercept = 0)+
   # labels
-  geom_label(aes(label = Ind, fill = Pop), size = 4, show.legend = FALSE)+
+  # geom_label(aes(label = Ind, fill = Pop), size = 4, show.legend = FALSE)+
+  # spider segments
+  geom_segment(aes(xend = Axis1.cen, yend = Axis3.cen, colour = Pop), show.legend = FALSE)+
+  # points
+  geom_point(aes(fill = Pop), shape = 21, size = 4,  show.legend = FALSE)+
+  # centroids
+  geom_label(data = centroid, aes(label = Pop, fill = Pop), size = 5, alpha = 0.9, show.legend = FALSE)+
   # colouring
   scale_fill_manual(values = cols)+
   scale_colour_manual(values = cols)+
@@ -251,8 +263,8 @@ pca.plt2
 # Figure 1
 fig1 = ggarrange(pca.plt1, pca.plt2, labels = c("(a)","(b)"), ncol = 2)
 fig1
-ggsave(plot = fig1, "./Figures/Figure1.png", width = 15, height = 7, dpi = 600)
-ggsave(plot = fig1, "./Figures/Figure1.pdf", width = 15, height = 7)
+# ggsave(plot = fig1, "./Figures/Figure1.png", width = 15, height = 7, dpi = 600)
+# ggsave(plot = fig1, "./Figures/Figure1.pdf", width = 15, height = 7)
 
 
 
@@ -299,8 +311,8 @@ Fst = ggplot(data = df.pairwise, aes(x = Site1, y = Site2, fill = Fst))+
         legend.text = element_text(size = 12),
         plot.title = element_text(hjust=0.5, size=18, face="bold"))
 Fst
-ggsave(plot = Fst, "Figures/FigureS3.png", width=8, height=7, dpi=600)
-ggsave(plot = Fst, "Figures/FigureS3.pdf", width=8, height=7)
+# ggsave(plot = Fst, "Figures/FigureS3.png", width=8, height=7, dpi=600)
+# ggsave(plot = Fst, "Figures/FigureS3.pdf", width=8, height=7)
 
 
 # ----------------- #

@@ -115,43 +115,48 @@ ind_coords$Ind = indNames(intro.snps)
 
 # Add a column with the population IDs
 ind_coords$Pop = intro.snps$pop
-
-# Conditional function that adds other labels to dataframe (optional)
-addlabel = function(x){
-  # If population label x is present function will output y
-  # if(x=="Fal") y = "Fal Estuary"
-  if(x=="Zar"|x=="Man"|x=="Mor"|x=="Tre"|x=="Fal"|x=="Mil"|x=="Nor"|x=="Roc") y = "P. calcareum"
-  if(x=="Lcor") y = "L. corallioides"
-  if(x=="Sco") y = "P. purpureum"
-  return(y)
-}
-ind_coords$Species = sapply(ind_coords$Pop, addlabel)  
 head(ind_coords)
 
-# Calculate centroid (average) position for each population
-centroid = aggregate(cbind(Axis1, Axis2, Axis3) ~ Pop,
-                     data = ind_coords,
-                     FUN = mean)
+# Convert Sco to Ppur
+ind_coords$Ind = gsub("Sco", "Ppur", ind_coords$Ind)
+ind_coords$Pop = gsub("Sco", "Ppur", ind_coords$Pop)
 
-# Add centroid coordinates to ind_coords dataframe
-ind_coords = left_join(ind_coords, centroid, by = "Pop", suffix = c("",".cen"))
-head(ind_coords)
+# Colour definitions
+levels(ind_coords$Pop)
+# blue "#377eb8"
+# orange "#ff7f00"
+# blue-green "#009E73"
+# purple "#984ea3"
+# red "#e41a1c"
+# dark red "#a50f15"
+cols = data.frame("Fal" = "#ff7f00",
+                  "Lcor" = "#d9d9d9",
+                  "Man" = "#377eb8",
+                  "Mil" = "#377eb8",
+                  "Mor" = "#984ea3",
+                  "Nor" = "yellow3",
+                  "Roc" = "white",
+                  "Ppur" = "#737373",
+                  "Tre" = "#009E73",
+                  "Zar" = "#377eb8",
+                  check.names = FALSE)
 
-# Add region labels to centroid dataframe
-centroid$Species = sapply(centroid$Pop, addlabel)  
-centroid
+# Change factor order
+pop_order = c("Nor","Zar","Mil","Man","Fal","Mor","Tre","Roc","Ppur","Lcor")
+ind_coords$Pop = factor(ind_coords$Pop,
+                            levels = pop_order) 
 
 # Custom x and y labels
 xlab = paste("Axis 1 (", format(round(percent[1], 1), nsmall=1)," %)", sep="")
 ylab = paste("Axis 2 (", format(round(percent[2], 1), nsmall=1)," %)", sep="")
 
 # Custom ggplot2 theme
-ggtheme = theme(legend.title = element_blank(),
+ggtheme = theme(legend.title = element_text(size = 13, face = "bold"),
                 axis.text.y = element_text(colour="black", size=14),
                 axis.text.x = element_text(colour="black", size=14),
                 axis.title = element_text(colour="black", size=14),
                 legend.position = "top",
-                legend.text = element_text(size=14),
+                legend.text = element_text(size=13),
                 legend.key = element_rect(fill = NA),
                 legend.key.size = unit(0.7, "cm"),
                 legend.box.spacing = unit(0, "cm"),
@@ -159,47 +164,35 @@ ggtheme = theme(legend.title = element_blank(),
                 panel.border = element_rect(colour="black", fill=NA, size=1),
                 panel.background = element_blank(),
                 # title centered
-                plot.title = element_text(hjust=0.5, size=20) 
+                plot.title = element_text(hjust=0.5, size=15) 
 )
 
-# Convert Sco to Ppur
-ind_coords$Ind = gsub("Sco", "Ppur", ind_coords$Ind)
-ind_coords$Ind
-
-# Change factor order
-# species_order = c("P. calcareum","Fal Estuary","P. purpureum","L. corallioides")
-species_order = c("P. calcareum","P. purpureum","L. corallioides")
-ind_coords$Species = factor(ind_coords$Species,
-                            levels = species_order) 
-
-# Define colour palette
-# cols = c("pink","#ff7f00","#737373","#d9d9d9")
-cols = c("pink","#737373","#d9d9d9")
-library(scales)
-show_col(cols)
-
+# Add species labels
+species_labels = data.frame(labs = c("P. calcareum", "P. purpureum", "L. corallioides"),
+                            X = c(-9.5, 25, 12),
+                            Y = c( -2, -2, 44)
+)
+          
 # Scatter plot axis 1 vs. 2
 pca1 = ggplot(data = ind_coords, aes(x = Axis1, y = Axis2))+
   geom_hline(yintercept = 0)+
   geom_vline(xintercept = 0)+
-  # labels
-  geom_point(aes(fill = Species), shape = 21, size = 5, show.legend = TRUE)+
-  geom_label(aes(label = Ind, fill = Species), size = 4.5, show.legend = FALSE)+
-  geom_label(data = subset(ind_coords, Pop == "Fal"),
-             aes(label = Ind, fill = Species), size = 4.5, show.legend = FALSE)+
+  # points
+  geom_point(aes(fill = Pop), shape = 21, size = 4, alpha = 0.9, show.legend = TRUE)+
   # colouring
-  scale_fill_manual(values = cols,
-                    labels = c(expression(italic("P. calcareum")),
-                               # "Fal Estuary",
-                               expression(italic("P. purpureum")),
-                               expression(italic("L. corallioides"))
-                               )
-                    )+
-  scale_colour_manual(values = cols)+
+  scale_fill_manual("Site", values = cols)+
+  # species labels
+  geom_text(data = species_labels, aes(x = X, y = Y, label = labs), fontface = "italic",
+            size = 5)+
+  # custom labels
+  labs(x = xlab, y = ylab)+
+  # title
+  # ggtitle("Principal components analysis (1 vs. 2)")+
   # custom labels
   labs(x = xlab, y = ylab, tag = "(a)")+
   # custom theme
-  ggtheme
+  ggtheme+
+  guides(fill = guide_legend(nrow = 2, title.position = "left", title.hjust = 0.5))
 pca1
 
 
@@ -227,7 +220,7 @@ lcor.df$Group = factor(lcor.df$Group, levels = c("A","B","0.5_A-0.5_B"))
 
 # Plot results
 lcor.bar = ggplot(data=lcor.df, aes(x=ID, y=Value, fill=Group))+
-  geom_bar(stat="identity", show.legend = TRUE, colour="black")+
+  geom_bar(stat="identity", width = 1, size = 0.25, show.legend = TRUE, colour="black")+
   scale_y_continuous(expand=c(0,0))+
   scale_fill_manual(values = c("pink","#d9d9d9","black"),
                     labels = c(expression(italic("P. calcareum")),
@@ -270,7 +263,7 @@ ppur.df$ID
 
 # Plot results
 ppur.bar = ggplot(data=ppur.df, aes(x=ID, y=Value, fill=Group))+
-  geom_bar(stat="identity", show.legend = TRUE, colour="black")+
+  geom_bar(stat="identity", width=1, size=0.25, show.legend = TRUE, colour="black")+
   scale_y_continuous(expand=c(0,0))+
   scale_fill_manual(values = c("pink","#737373","black"),
                     labels = c(expression(italic("P. calcareum")),

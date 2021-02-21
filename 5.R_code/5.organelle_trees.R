@@ -64,11 +64,12 @@ show_col(brewer.pal(11, "RdYlBu"))
 cols = brewer.pal(11, "RdYlBu") ; cols
 
 # Function to add a specific colour to dataframe depending on site
-# red "#e41a1c"
 # blue "#377eb8"
-# purple "#984ea3"
 # orange "#ff7f00"
-# green "#4daf4a"
+# blue-green "#009E73"
+# purple "#984ea3"
+# red "#e41a1c"
+# dark red "#a50f15"
 addcolours = function(x){
   # If pop label is present function will output the colour
   if(x=="Nor") y = "yellow3"
@@ -77,7 +78,7 @@ addcolours = function(x){
   if(x=="Man") y = "#377eb8"
   if(x=="Fal") y = "#ff7f00"
   if(x=="Mor") y = "#984ea3"
-  if(x=="Tre") y = "#4daf4a"
+  if(x=="Tre") y = "#009E73"
   if(x=="Roc") y = "black"
   if(x=="Bor") y = "#e41a1c"
   if(x=="Ons") y = "#a50f15"
@@ -163,7 +164,7 @@ addcolours = function(x){
   if(x=="Man") y = "#377eb8"
   if(x=="Fal") y = "#ff7f00"
   if(x=="Mor") y = "#984ea3"
-  if(x=="Tre") y = "#4daf4a"
+  if(x=="Tre") y = "#009E73"
   if(x=="Roc") y = "black"
   if(x=="Bor") y = "#e41a1c"
   if(x=="Ons") y = "#a50f15"

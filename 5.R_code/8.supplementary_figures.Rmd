@@ -1,6 +1,7 @@
 ---
-title: "Maerl Whole Genome Genotyping Supplementary Figures"
-author: "Jenkins et al."
+title: "Whole genome genotyping reveals discrete genetic diversity in north-east Atlantic maerl beds"
+subtitle: "Supplementary Figures"
+author: "Jenkins et al. 2021"
 output: pdf_document
 ---
 
